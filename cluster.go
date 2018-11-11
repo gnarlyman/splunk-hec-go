@@ -20,18 +20,20 @@ type Cluster struct {
 	maxRetries int
 }
 
-func NewCluster(serverURLs []string, token string) HEC {
-	id, err := uuid.NewV4()
-	if err != nil {
-		panic(err)
-	}
+type ClientConfig struct {
+	ServerURL string
+	Token     string
+}
+
+func NewCluster(clConfigs []ClientConfig) HEC {
+	id := uuid.NewV4()
 	channel := id.String()
-	clients := make([]*Client, len(serverURLs))
-	for i, serverURL := range serverURLs {
+	clients := make([]*Client, len(clConfigs))
+	for i, config := range clConfigs {
 		clients[i] = &Client{
 			httpClient: http.DefaultClient,
-			serverURL:  serverURL,
-			token:      token,
+			serverURL:  config.ServerURL,
+			token:      config.Token,
 			keepAlive:  true,
 			channel:    channel,
 			retries:    0, // try only once for each client

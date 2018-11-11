@@ -44,10 +44,7 @@ type Client struct {
 }
 
 func NewClient(serverURL string, token string) HEC {
-	id, err := uuid.NewV4()
-	if err != nil {
-		panic(err)
-	}
+	id := uuid.NewV4()
 	return &Client{
 		httpClient: http.DefaultClient,
 		serverURL:  serverURL,
